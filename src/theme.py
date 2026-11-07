@@ -139,7 +139,7 @@ div[role="dialog"] {{ border:1px solid rgba(90,160,255,.45); border-top:3px soli
 div[role="dialog"] header, div[role="dialog"] [data-testid="stDialogHeader"] {{ background:#070d1b !important; }}
 div[role="dialog"] h1, div[role="dialog"] h2, div[role="dialog"] h3 {{ color:#fff !important; }}
 div[role="dialog"] button[aria-label="Close"], div[role="dialog"] button[aria-label="Close"] svg {{ color:#fff !important; fill:#fff !important; }}
-[data-testid="stDialog"] > div, [data-testid="stModal"] > div {{ background-color:rgba(2,4,10,.78) !important; }}
+[data-testid="stDialog"] > div, [data-testid="stModal"] > div {{ background-color:rgba(2,4,10,.95) !important; }}
 [class*="st-key-incbtn_"] button, [class*="st-key-hallbtn_"] button {{ justify-content:flex-start; text-align:left; border:1px solid rgba(90,160,255,.4); border-left:4px solid var(--rgbsolid, var(--azul));
   background:rgba(47,107,255,.08); text-transform:none; letter-spacing:.02em; font-family:{TEXTO}; font-weight:600; border-radius:2px; }}
 [class*="st-key-incbtn_"] button:hover, [class*="st-key-hallbtn_"] button:hover {{ background:rgba(47,107,255,.25); }}
@@ -230,7 +230,7 @@ def hero(periodo: dict | None = None) -> None:
         pie = '<div class="hero-vacio">Carga el export del SIEM para comenzar</div>'
     st.markdown(f"""
 <div class="hero">{_red_svg()}<span class="punto"></span>
-  <div class="hero-kicker">LOG ANALYSIS & SECURITY INTELLIGENCE</div>
+  <div class="hero-kicker">SOC - SIEMInsight</div>
   <h1>ANÁLISIS DE<span class="raya"></span><br>INCIDENTES <span class="hueco">SIEM</span></h1>
   <div class="hero-lateral">Bootcamp analista SOC<br><span class="marca">NIVEL 2</span><br>reto final</div>
   {pie}

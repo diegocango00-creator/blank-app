@@ -1,5 +1,3 @@
-import base64
-
 import streamlit as st
 
 from src import ai, charts, inventario, pdf_report, tablas, theme
@@ -8,7 +6,7 @@ from src.detectors import conteo_categorias, explorador, run_all
 from src.report import a_markdown, construir_informe, formato_periodo
 from src.loader import FORMATOS, SiemFormatError, load_siem
 
-st.set_page_config(page_title="SOC-SIEMInsight", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="SOC - SIEMInsight", page_icon="🛡️", layout="wide")
 theme.aplicar_tema()
 HERO = st.empty()
 with HERO.container():
@@ -144,11 +142,31 @@ def _pdf(tipo: str, nar) -> bytes:
     return cache[clave]
 
 
+def _paginas_png(pdf: bytes) -> list[bytes]:
+    """Páginas del PDF como PNG (Chrome bloquea los PDF incrustados con data:, así que se muestran como imágenes)."""
+    try:
+        import pymupdf as fitz
+    except ImportError:
+        import fitz
+    clave = hash(pdf)
+    cache = st.session_state.setdefault("png_pdf", {})
+    if clave not in cache:
+        cache.clear()
+        doc = fitz.open(stream=pdf, filetype="pdf")
+        cache[clave] = [pag.get_pixmap(dpi=110).tobytes("png") for pag in doc]
+    return cache[clave]
+
+
 def _vista_pdf(pdf: bytes) -> None:
-    b64 = base64.b64encode(pdf).decode()
-    st.markdown(f'<iframe src="data:application/pdf;base64,{b64}" width="100%" height="640" '
-                f'style="border:1px solid #2f6bff;background:#0a1224"></iframe>', unsafe_allow_html=True)
-    st.caption("Si tu navegador no muestra la vista previa, usa el botón de descarga.")
+    try:
+        paginas = _paginas_png(pdf)
+    except Exception as e:   # sin PyMuPDF o PDF ilegible: la descarga sigue funcionando
+        st.warning(f"No se pudo generar la vista previa ({type(e).__name__}). Usa el botón de descarga.")
+        return
+    st.caption(f"Vista previa · {len(paginas)} página(s). Desplázate para ver todo el informe.")
+    with st.container(height=640, border=True):
+        for n, img in enumerate(paginas, 1):
+            st.image(img, caption=f"Página {n}", use_container_width=True)
 
 
 def abrir_informe(tipo: str) -> None:
