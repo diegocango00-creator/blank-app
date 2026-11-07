@@ -1,0 +1,11 @@
+streamlit
+pandas
+openpyxl
+plotly
+matplotlib
+reportlab
+anthropic
+python-dotenv
+pytest
+xlrd
+odfpy
